@@ -1,12 +1,12 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
-import ConfigParser
+import configparser
 
 
 def configread(conffile, section, *parameters):
 
     # read configuration file
-    config = ConfigParser.RawConfigParser()
+    config = configparser.RawConfigParser()
     config.read(conffile)
     params = dict()
 
@@ -14,8 +14,8 @@ def configread(conffile, section, *parameters):
     for parameter in parameters:
         try:
             params[parameter] = config.get(section, parameter)
-        except ConfigParser.NoOptionError as err:
-            print (err, '. Please set ' + parameter + ' value in the ' +
-                   'configuration file ' + conffile)
+        except configparser.NoOptionError as err:
+            print(
+                err, f"Please set {parameter} value in the configuration file {conffile}")
 
     return params

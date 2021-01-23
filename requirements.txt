@@ -1,0 +1,3 @@
+py-zabbix>=1.1.7
+pyghmi>=1.5.20
+requests
