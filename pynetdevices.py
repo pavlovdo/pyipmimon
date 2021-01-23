@@ -1,99 +1,18 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 
 class NetworkDevice:
+    """ base class for network devices """
 
-    def __init__(self, hostname, ip, login=None, password=None, enablepw=None):
+    def __init__(self, hostname, ip, login=None, password=None, enablepw=None,
+                 slack_hook=None):
 
         self.hostname = hostname
         self.ip = ip
         self.login = login
         self.password = password
         self.enablepw = enablepw
-
-
-class CiscoDevice(NetworkDevice):
-
-    def getConfig(self, printing=False):
-
-        import paramiko
-
-        client = paramiko.SSHClient()
-        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        client.connect(self.ip.rstrip(), username=self.login,
-                       password=self.password, timeout=10,
-                       allow_agent=False, look_for_keys=False)
-        stdin, stdout, stderr = client.exec_command('show run')
-        confbinary = stdout.read() + stderr.read()
-
-        conftext = confbinary.decode("utf-8")
-        conflist = conftext.split("\n")[4:]
-
-        if printing:
-            for confline in conflist:
-                print (confline)
-
-        client.close()
-
-        return conflist
-
-    def saveConfig(self, conflist, savedir):
-
-        fh = open(savedir + '/' + self.hostname, 'w')
-        for confline in conflist:
-            fh.write(confline + '\n')
-        fh.close()
-
-
-class CiscoASA(CiscoDevice):
-
-    def getConfig(self, endstring=': end', printing=False):
-
-        import paramiko
-
-        conffull = ''
-        client = paramiko.SSHClient()
-        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        client.connect(self.ip.rstrip(), username=self.login,
-                       password=self.password, allow_agent=False,
-                       look_for_keys=False)
-
-        channel = client.invoke_shell()
-        channel.send('enable\n')
-        channel.send(self.enablepw + '\n')
-
-        while True:
-            channel.send('show run\n')
-            confbinary = channel.recv(4096)
-            conftext = confbinary.decode("utf-8")
-            if endstring in conftext:
-                endindex = conftext.find(endstring)
-                conffull += conftext[:endindex]
-                break
-            conffull += conftext
-
-        conflist = conffull.split("\n")[4:]
-
-        if printing:
-            for confline in conflist:
-                print (confline)
-
-        channel.close()
-        client.close()
-
-        return conflist
-
-
-class CiscoNexus(CiscoDevice):
-    pass
-
-
-class CiscoRouter(CiscoDevice):
-    pass
-
-
-class CiscoSwitch(CiscoDevice):
-    pass
+        self.slack_hook = slack_hook
 
 
 class IPMICard(NetworkDevice):
@@ -141,43 +60,26 @@ class IPMICard(NetworkDevice):
         print (self.password)
 
 
-class LinuxServer(NetworkDevice):
+class WBEMDevice(NetworkDevice):
+    """ class for WBEM devices """
 
-    def getConfig(self, remotepath, tempdir='./tmp/',
-                  use_key_pairs=True, printing=False):
+    def Connect(self, namespace='root/ibm', printing=False):
 
-        import os
-        import paramiko
+        from pyslack import slack_post
+        from pywbem import WBEMConnection
+        from sys import exc_info
 
-        self.tempdir = tempdir
+        server_uri = 'https://' + self.ip.rstrip()
+        conn = 0
 
-        client = paramiko.SSHClient()
-        client.load_system_host_keys()
+        try:
+            conn = WBEMConnection(server_uri,
+                                  (self.login, self.password),
+                                  namespace, no_verification=True)
+        except:
+            if self.slack_hook:
+                slack_post(self.slack_hook, 'Unexpected exception in ' +
+                           str(self.__class__) + '.' + str(exc_info()),
+                           self.hostname, self.ip)
 
-        if use_key_pairs:
-            client.connect(self.hostname)
-        else:
-            client.connect(self.hostname, username=self.login,
-                           password=self.password)
-
-        temppath = tempdir + os.path.basename(remotepath)
-        sftp = client.open_sftp()
-        sftp.get(remotepath, temppath)
-
-        if printing:
-            fhand = open(temppath, 'r')
-            for line in fhand:
-                print(line)
-
-    def saveConfig(self, filename, savedir='./data', overwrite=True, vc=True):
-
-        import os
-
-        if not os.path.exists(savedir + '/' + self.hostname):
-            os.mkdir(savedir + '/' + self.hostname)
-
-        dstpath = savedir + '/' + self.hostname + '/' + filename
-        if not os.path.isfile(dstpath) or overwrite:
-            os.rename(self.tempdir + filename, dstpath)
-        else:
-            print ('File ' + dstpath + ' is already exist, keep the old file')
+        return conn

@@ -1,0 +1,6 @@
+Description
+===========
+Zabbix monitoring of state and values of physical server sensors via IPMI
+
+Tested with IBM x3550/x3755, Lenovo SR570/SR630, HP DL380G6
+
