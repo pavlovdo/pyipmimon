@@ -106,7 +106,7 @@ B) Run dockerrun.sh;
 
 Notes
 ======
-1) For send exception alarms via slack hook to your slack channel, set parameter slack_hook in conf.d/pystormon.conf.
+1) For send exception alarms via slack hook to your slack channel, set parameter slack_hook in conf.d/pyipmimon.conf.
 More details in https://api.slack.com/messaging/webhooks
 
 
