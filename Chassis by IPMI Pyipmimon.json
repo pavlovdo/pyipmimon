@@ -1,0 +1,983 @@
+{
+    "zabbix_export": {
+        "version": "5.2",
+        "date": "2021-01-25T08:13:42Z",
+        "groups": [
+            {
+                "name": "Templates/Server hardware"
+            }
+        ],
+        "templates": [
+            {
+                "template": "Chassis by IPMI Pyipmimon",
+                "name": "Chassis by IPMI Pyipmimon",
+                "groups": [
+                    {
+                        "name": "Templates/Server hardware"
+                    }
+                ],
+                "applications": [
+                    {
+                        "name": "Cable/Interconnect Sensors"
+                    },
+                    {
+                        "name": "Cooling Device Sensors"
+                    },
+                    {
+                        "name": "Current Sensors"
+                    },
+                    {
+                        "name": "Drive Bay Sensors"
+                    },
+                    {
+                        "name": "Fan Sensors"
+                    },
+                    {
+                        "name": "Power Supply Sensors"
+                    },
+                    {
+                        "name": "Sensors"
+                    },
+                    {
+                        "name": "System Events"
+                    },
+                    {
+                        "name": "System Firmware"
+                    },
+                    {
+                        "name": "Temperature Sensors"
+                    },
+                    {
+                        "name": "Voltage Sensors"
+                    }
+                ],
+                "discovery_rules": [
+                    {
+                        "name": "IPMI Cable Interconnect Sensors",
+                        "type": "TRAP",
+                        "key": "ipmi.sensors.CableInterconnect.discovery",
+                        "delay": "0",
+                        "lifetime": "3d",
+                        "item_prototypes": [
+                            {
+                                "name": "State 1 of Cable/Interconnect sensor {#SENSOR_NAME}",
+                                "type": "TRAP",
+                                "key": "state1[Cable/Interconnect.{#SENSOR_NAME}]",
+                                "delay": "0",
+                                "applications": [
+                                    {
+                                        "name": "Cable/Interconnect Sensors"
+                                    }
+                                ],
+                                "valuemap": {
+                                    "name": "IPMISensorState"
+                                },
+                                "trigger_prototypes": [
+                                    {
+                                        "expression": "not ({last()}=1 or {last()}=6 or {last()}=100)",
+                                        "name": "State of Cable/Interconnect sensor {#SENSOR_NAME} is not Present/Normal/Connected",
+                                        "priority": "INFO"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "Value of Cable/Interconnect sensor {#SENSOR_NAME}",
+                                "type": "TRAP",
+                                "key": "value[Cable/Interconnect.{#SENSOR_NAME}]",
+                                "delay": "0",
+                                "value_type": "FLOAT",
+                                "applications": [
+                                    {
+                                        "name": "Cable/Interconnect Sensors"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "name": "IPMI Cooling Device Sensors",
+                        "type": "TRAP",
+                        "key": "ipmi.sensors.CoolingDevice.discovery",
+                        "delay": "0",
+                        "lifetime": "3d",
+                        "item_prototypes": [
+                            {
+                                "name": "State 1 of Cooling Device sensor {#SENSOR_NAME}",
+                                "type": "TRAP",
+                                "key": "state1[Cooling Device.{#SENSOR_NAME}]",
+                                "delay": "0",
+                                "applications": [
+                                    {
+                                        "name": "Cooling Device Sensors"
+                                    }
+                                ],
+                                "valuemap": {
+                                    "name": "IPMISensorState"
+                                },
+                                "trigger_prototypes": [
+                                    {
+                                        "expression": "{last()}=4",
+                                        "name": "State of Cooling Device sensor {#SENSOR_NAME} is Not redundant",
+                                        "priority": "INFO"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "Value of Cooling Device sensor {#SENSOR_NAME}",
+                                "type": "TRAP",
+                                "key": "value[Cooling Device.{#SENSOR_NAME}]",
+                                "delay": "0",
+                                "value_type": "FLOAT",
+                                "applications": [
+                                    {
+                                        "name": "Cooling Device Sensors"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "name": "IPMI Current Sensors",
+                        "type": "TRAP",
+                        "key": "ipmi.sensors.Current.discovery",
+                        "delay": "0",
+                        "lifetime": "3d",
+                        "item_prototypes": [
+                            {
+                                "name": "State 1 of Current sensor {#SENSOR_NAME}",
+                                "type": "TRAP",
+                                "key": "state1[Current.{#SENSOR_NAME}]",
+                                "delay": "0",
+                                "applications": [
+                                    {
+                                        "name": "Current Sensors"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "Value of Current sensor {#SENSOR_NAME}",
+                                "type": "TRAP",
+                                "key": "value[Current.{#SENSOR_NAME}]",
+                                "delay": "0",
+                                "value_type": "FLOAT",
+                                "units": "W",
+                                "applications": [
+                                    {
+                                        "name": "Current Sensors"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "name": "IPMI Sensors",
+                        "type": "TRAP",
+                        "key": "ipmi.sensors.discovery",
+                        "delay": "0",
+                        "lifetime": "3d",
+                        "item_prototypes": [
+                            {
+                                "name": "State 1 of sensor {#SENSOR_TYPE}.{#SENSOR_NAME}",
+                                "type": "TRAP",
+                                "key": "state1[{#SENSOR_TYPE}.{#SENSOR_NAME}]",
+                                "delay": "0",
+                                "applications": [
+                                    {
+                                        "name": "Sensors"
+                                    }
+                                ],
+                                "valuemap": {
+                                    "name": "IPMISensorState"
+                                },
+                                "trigger_prototypes": [
+                                    {
+                                        "expression": "{nodata(1d)}=0 and {nodata(1h)}=1",
+                                        "name": "No data for an hour from {#SENSOR_TYPE}.{#SENSOR_NAME}",
+                                        "priority": "WARNING",
+                                        "description": "Last value: {ITEM.LASTVALUE1}"
+                                    },
+                                    {
+                                        "expression": "not ({last()}=0 or {last()}=1 or {last()}=2 or {last()}=3 or {last()}=6 or {last()}=7 or {last()}=9 or {last()}=13 or {last()}=14 or {last()}=20 or {last()}=100)",
+                                        "name": "State of {#SENSOR_TYPE}.{#SENSOR_NAME} is not good",
+                                        "status": "DISABLED",
+                                        "priority": "AVERAGE",
+                                        "description": "Last value: {ITEM.LASTVALUE1}"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "State 2 of sensor {#SENSOR_TYPE}.{#SENSOR_NAME}",
+                                "type": "TRAP",
+                                "key": "state2[{#SENSOR_TYPE}.{#SENSOR_NAME}]",
+                                "delay": "0",
+                                "applications": [
+                                    {
+                                        "name": "Sensors"
+                                    }
+                                ],
+                                "valuemap": {
+                                    "name": "IPMISensorState"
+                                }
+                            },
+                            {
+                                "name": "State 3 of sensor {#SENSOR_TYPE}.{#SENSOR_NAME}",
+                                "type": "TRAP",
+                                "key": "state3[{#SENSOR_TYPE}.{#SENSOR_NAME}]",
+                                "delay": "0",
+                                "applications": [
+                                    {
+                                        "name": "Sensors"
+                                    }
+                                ],
+                                "valuemap": {
+                                    "name": "IPMISensorState"
+                                }
+                            },
+                            {
+                                "name": "State 4 of sensor {#SENSOR_TYPE}.{#SENSOR_NAME}",
+                                "type": "TRAP",
+                                "key": "state4[{#SENSOR_TYPE}.{#SENSOR_NAME}]",
+                                "delay": "0",
+                                "applications": [
+                                    {
+                                        "name": "Sensors"
+                                    }
+                                ],
+                                "valuemap": {
+                                    "name": "IPMISensorState"
+                                }
+                            },
+                            {
+                                "name": "State 5 of sensor {#SENSOR_TYPE}.{#SENSOR_NAME}",
+                                "type": "TRAP",
+                                "key": "state5[{#SENSOR_TYPE}.{#SENSOR_NAME}]",
+                                "delay": "0",
+                                "applications": [
+                                    {
+                                        "name": "Sensors"
+                                    }
+                                ],
+                                "valuemap": {
+                                    "name": "IPMISensorState"
+                                }
+                            },
+                            {
+                                "name": "Value of sensor {#SENSOR_TYPE}.{#SENSOR_NAME}",
+                                "type": "TRAP",
+                                "key": "value[{#SENSOR_TYPE}.{#SENSOR_NAME}]",
+                                "delay": "0",
+                                "value_type": "FLOAT",
+                                "applications": [
+                                    {
+                                        "name": "Sensors"
+                                    }
+                                ],
+                                "application_prototypes": [
+                                    {
+                                        "name": "Sensors"
+                                    }
+                                ]
+                            }
+                        ],
+                        "trigger_prototypes": [
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=9 or {Chassis by IPMI Pyipmimon:state2[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=9 or {Chassis by IPMI Pyipmimon:state3[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=9 or {Chassis by IPMI Pyipmimon:state4[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=9 or {Chassis by IPMI Pyipmimon:state5[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=9",
+                                "name": "State of System Firmware {#SENSOR_NAME} is Successful software/firmware change",
+                                "priority": "INFO"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=14 or {Chassis by IPMI Pyipmimon:state2[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=14 or {Chassis by IPMI Pyipmimon:state3[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=14 or {Chassis by IPMI Pyipmimon:state4[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=14 or {Chassis by IPMI Pyipmimon:state5[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=14",
+                                "name": "State of {#SENSOR_TYPE}.{#SENSOR_NAME} is Asserted",
+                                "priority": "AVERAGE"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=27 or {Chassis by IPMI Pyipmimon:state2[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=27 or {Chassis by IPMI Pyipmimon:state3[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=27 or {Chassis by IPMI Pyipmimon:state4[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=27 or {Chassis by IPMI Pyipmimon:state5[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=27",
+                                "name": "State of {#SENSOR_TYPE}.{#SENSOR_NAME} is Bus uncorrectable error",
+                                "priority": "HIGH"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[{#SENSOR_TYPE}.{#SENSOR_NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state2[{#SENSOR_TYPE}.{#SENSOR_NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state3[{#SENSOR_TYPE}.{#SENSOR_NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state4[{#SENSOR_TYPE}.{#SENSOR_NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state5[{#SENSOR_TYPE}.{#SENSOR_NAME}].diff()}=1",
+                                "name": "State of {#SENSOR_TYPE}.{#SENSOR_NAME} is changed",
+                                "priority": "INFO",
+                                "description": "Last value: {ITEM.LASTVALUE1}."
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=22 or {Chassis by IPMI Pyipmimon:state2[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=22 or {Chassis by IPMI Pyipmimon:state3[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=22 or {Chassis by IPMI Pyipmimon:state4[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=22 or {Chassis by IPMI Pyipmimon:state5[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=22",
+                                "name": "State of {#SENSOR_TYPE}.{#SENSOR_NAME} is Correctable memory error logging limit reached",
+                                "priority": "WARNING"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=29 or {Chassis by IPMI Pyipmimon:state2[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=29 or {Chassis by IPMI Pyipmimon:state3[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=29 or {Chassis by IPMI Pyipmimon:state4[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=29 or {Chassis by IPMI Pyipmimon:state5[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=29",
+                                "name": "State of {#SENSOR_TYPE}.{#SENSOR_NAME} is Device disabled",
+                                "priority": "HIGH"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=18 or {Chassis by IPMI Pyipmimon:state2[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=18 or {Chassis by IPMI Pyipmimon:state3[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=18 or {Chassis by IPMI Pyipmimon:state4[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=18 or {Chassis by IPMI Pyipmimon:state5[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=18",
+                                "name": "State of {#SENSOR_TYPE}.{#SENSOR_NAME} is Drive fault",
+                                "priority": "HIGH"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=17 or {Chassis by IPMI Pyipmimon:state2[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=17 or {Chassis by IPMI Pyipmimon:state3[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=17 or {Chassis by IPMI Pyipmimon:state4[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=17 or {Chassis by IPMI Pyipmimon:state5[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=17",
+                                "name": "State of {#SENSOR_TYPE}.{#SENSOR_NAME} is Drive in critical array",
+                                "priority": "HIGH"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=10 or {Chassis by IPMI Pyipmimon:state2[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=10 or {Chassis by IPMI Pyipmimon:state3[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=10 or {Chassis by IPMI Pyipmimon:state4[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=10 or {Chassis by IPMI Pyipmimon:state5[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=10",
+                                "name": "State of {#SENSOR_TYPE}.{#SENSOR_NAME} is Event log full",
+                                "priority": "WARNING"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=11 or {Chassis by IPMI Pyipmimon:state2[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=11 or {Chassis by IPMI Pyipmimon:state3[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=11 or {Chassis by IPMI Pyipmimon:state4[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=11 or {Chassis by IPMI Pyipmimon:state5[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=11",
+                                "name": "State of {#SENSOR_TYPE}.{#SENSOR_NAME} is Event log nearly full",
+                                "priority": "WARNING"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=20 or {Chassis by IPMI Pyipmimon:state2[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=20 or {Chassis by IPMI Pyipmimon:state3[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=20 or {Chassis by IPMI Pyipmimon:state4[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=20 or {Chassis by IPMI Pyipmimon:state5[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=20",
+                                "name": "State of {#SENSOR_TYPE}.{#SENSOR_NAME} is Log clear",
+                                "priority": "INFO"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=12 or {Chassis by IPMI Pyipmimon:state2[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=12 or {Chassis by IPMI Pyipmimon:state3[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=12 or {Chassis by IPMI Pyipmimon:state4[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=12 or {Chassis by IPMI Pyipmimon:state5[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=12",
+                                "name": "State of {#SENSOR_TYPE}.{#SENSOR_NAME} is lower critical threshold",
+                                "priority": "HIGH"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=23 or {Chassis by IPMI Pyipmimon:state2[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=23 or {Chassis by IPMI Pyipmimon:state3[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=23 or {Chassis by IPMI Pyipmimon:state4[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=23 or {Chassis by IPMI Pyipmimon:state5[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=23",
+                                "name": "State of {#SENSOR_TYPE}.{#SENSOR_NAME} is Memory Logging Limit Reached",
+                                "priority": "WARNING",
+                                "description": "Last value: {ITEM.LASTVALUE1}"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=21 or {Chassis by IPMI Pyipmimon:state2[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=21 or {Chassis by IPMI Pyipmimon:state3[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=21 or {Chassis by IPMI Pyipmimon:state4[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=21 or {Chassis by IPMI Pyipmimon:state5[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=21",
+                                "name": "State of {#SENSOR_TYPE}.{#SENSOR_NAME} is No bootable media",
+                                "priority": "HIGH"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=8 or {Chassis by IPMI Pyipmimon:state2[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=8 or {Chassis by IPMI Pyipmimon:state3[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=8 or {Chassis by IPMI Pyipmimon:state4[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=8 or {Chassis by IPMI Pyipmimon:state5[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=8",
+                                "name": "State of {#SENSOR_TYPE}.{#SENSOR_NAME} is Predictive failure deasserted",
+                                "priority": "INFO"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=13 or {Chassis by IPMI Pyipmimon:state2[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=13 or {Chassis by IPMI Pyipmimon:state3[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=13 or {Chassis by IPMI Pyipmimon:state4[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=13 or {Chassis by IPMI Pyipmimon:state5[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=13",
+                                "name": "State of {#SENSOR_TYPE}.{#SENSOR_NAME} is Progress",
+                                "priority": "AVERAGE"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=19 or {Chassis by IPMI Pyipmimon:state2[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=19 or {Chassis by IPMI Pyipmimon:state3[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=19 or {Chassis by IPMI Pyipmimon:state4[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=19 or {Chassis by IPMI Pyipmimon:state5[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=19",
+                                "name": "State of {#SENSOR_TYPE}.{#SENSOR_NAME} is Rebuild in progress",
+                                "priority": "AVERAGE"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=30 or {Chassis by IPMI Pyipmimon:state2[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=30 or {Chassis by IPMI Pyipmimon:state3[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=30 or {Chassis by IPMI Pyipmimon:state4[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=30 or {Chassis by IPMI Pyipmimon:state5[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=30",
+                                "name": "State of {#SENSOR_TYPE}.{#SENSOR_NAME} is Scrub failed",
+                                "priority": "HIGH"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=24 or {Chassis by IPMI Pyipmimon:state2[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=24 or {Chassis by IPMI Pyipmimon:state3[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=24 or {Chassis by IPMI Pyipmimon:state4[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=24 or {Chassis by IPMI Pyipmimon:state5[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=24",
+                                "name": "State of {#SENSOR_TYPE}.{#SENSOR_NAME} is Slot/connector installed",
+                                "priority": "INFO"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=25 or {Chassis by IPMI Pyipmimon:state2[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=25 or {Chassis by IPMI Pyipmimon:state3[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=25 or {Chassis by IPMI Pyipmimon:state4[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=25 or {Chassis by IPMI Pyipmimon:state5[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=25",
+                                "name": "State of {#SENSOR_TYPE}.{#SENSOR_NAME} is Spare",
+                                "priority": "WARNING"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=28 or {Chassis by IPMI Pyipmimon:state2[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=28 or {Chassis by IPMI Pyipmimon:state3[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=28 or {Chassis by IPMI Pyipmimon:state4[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=28 or {Chassis by IPMI Pyipmimon:state5[{#SENSOR_TYPE}.{#SENSOR_NAME}].last()}=28",
+                                "name": "State of {#SENSOR_TYPE}.{#SENSOR_NAME} is Uncorrectable error",
+                                "priority": "HIGH"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "IPMI Drive Bay Sensors",
+                        "type": "TRAP",
+                        "key": "ipmi.sensors.DriveBay.discovery",
+                        "delay": "0",
+                        "lifetime": "3d",
+                        "item_prototypes": [
+                            {
+                                "name": "State 1 of Drive Bay sensor {#SENSOR_NAME}",
+                                "type": "TRAP",
+                                "key": "state1[Drive Bay.{#SENSOR_NAME}]",
+                                "delay": "0",
+                                "applications": [
+                                    {
+                                        "name": "Drive Bay Sensors"
+                                    }
+                                ],
+                                "valuemap": {
+                                    "name": "IPMISensorState"
+                                }
+                            },
+                            {
+                                "name": "State 2 of Drive Bay sensor {#SENSOR_NAME}",
+                                "type": "TRAP",
+                                "key": "state2[Drive Bay.{#SENSOR_NAME}]",
+                                "delay": "0",
+                                "applications": [
+                                    {
+                                        "name": "Drive Bay Sensors"
+                                    }
+                                ],
+                                "valuemap": {
+                                    "name": "IPMISensorState"
+                                }
+                            },
+                            {
+                                "name": "State 3 of Drive Bay sensor {#SENSOR_NAME}",
+                                "type": "TRAP",
+                                "key": "state3[Drive Bay.{#SENSOR_NAME}]",
+                                "delay": "0",
+                                "applications": [
+                                    {
+                                        "name": "Drive Bay Sensors"
+                                    }
+                                ],
+                                "valuemap": {
+                                    "name": "IPMISensorState"
+                                }
+                            },
+                            {
+                                "name": "Value of Drive Bay sensor {#SENSOR_NAME}",
+                                "type": "TRAP",
+                                "key": "value[Drive Bay.{#SENSOR_NAME}]",
+                                "delay": "0",
+                                "value_type": "FLOAT",
+                                "applications": [
+                                    {
+                                        "name": "Drive Bay Sensors"
+                                    }
+                                ]
+                            }
+                        ],
+                        "trigger_prototypes": [
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Drive Bay.{#SENSOR_NAME}].last()}=18 or {Chassis by IPMI Pyipmimon:state2[Drive Bay.{#SENSOR_NAME}].last()}=18 or {Chassis by IPMI Pyipmimon:state3[Drive Bay.{#SENSOR_NAME}].last()}=18",
+                                "name": "State of Drive Bay sensor {#SENSOR_NAME} is Drive fault",
+                                "priority": "AVERAGE"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Drive Bay.{#SENSOR_NAME}].last()}=17 or {Chassis by IPMI Pyipmimon:state2[Drive Bay.{#SENSOR_NAME}].last()}=17 or {Chassis by IPMI Pyipmimon:state3[Drive Bay.{#SENSOR_NAME}].last()}=17",
+                                "name": "State of Drive Bay sensor {#SENSOR_NAME} is Drive in critical array",
+                                "priority": "AVERAGE"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Drive Bay.{#SENSOR_NAME}].last()}=16 or {Chassis by IPMI Pyipmimon:state2[Drive Bay.{#SENSOR_NAME}].last()}=16 or {Chassis by IPMI Pyipmimon:state3[Drive Bay.{#SENSOR_NAME}].last()}=16",
+                                "name": "State of Drive Bay sensor {#SENSOR_NAME} is Predictive drive failure",
+                                "priority": "AVERAGE"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Drive Bay.{#SENSOR_NAME}].last()}=19 or {Chassis by IPMI Pyipmimon:state2[Drive Bay.{#SENSOR_NAME}].last()}=19 or {Chassis by IPMI Pyipmimon:state3[Drive Bay.{#SENSOR_NAME}].last()}=19",
+                                "name": "State of Drive Bay sensor {#SENSOR_NAME} is Rebuild in progress",
+                                "priority": "AVERAGE"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "IPMI Fan Sensors",
+                        "type": "TRAP",
+                        "key": "ipmi.sensors.Fan.discovery",
+                        "delay": "0",
+                        "filter": {
+                            "conditions": [
+                                {
+                                    "macro": "{#SENSOR_TYPE}",
+                                    "value": "Fan",
+                                    "formulaid": "A"
+                                }
+                            ]
+                        },
+                        "lifetime": "3d",
+                        "item_prototypes": [
+                            {
+                                "name": "State 1 of Fan sensor {#SENSOR_NAME}",
+                                "type": "TRAP",
+                                "key": "state1[Fan.{#SENSOR_NAME}]",
+                                "delay": "0",
+                                "applications": [
+                                    {
+                                        "name": "Fan Sensors"
+                                    }
+                                ],
+                                "valuemap": {
+                                    "name": "IPMISensorState"
+                                },
+                                "trigger_prototypes": [
+                                    {
+                                        "expression": "{diff()}=1",
+                                        "name": "State of Fan sensor {#SENSOR_NAME} is changed",
+                                        "priority": "AVERAGE"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "Value of Fan sensor {#SENSOR_NAME}",
+                                "type": "TRAP",
+                                "key": "value[Fan.{#SENSOR_NAME}]",
+                                "delay": "0",
+                                "value_type": "FLOAT",
+                                "applications": [
+                                    {
+                                        "name": "Fan Sensors"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "name": "IPMI Other Sensors",
+                        "type": "TRAP",
+                        "key": "ipmi.sensors.Other.discovery",
+                        "delay": "0",
+                        "lifetime": "3d",
+                        "item_prototypes": [
+                            {
+                                "name": "Value of Other sensor {#SENSOR_NAME}",
+                                "type": "TRAP",
+                                "key": "value.other[{#SENSOR_NAME}]",
+                                "delay": "0",
+                                "value_type": "FLOAT"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "IPMI Power Supply Sensors",
+                        "type": "TRAP",
+                        "key": "ipmi.sensors.PowerSupply.discovery",
+                        "delay": "0",
+                        "lifetime": "3d",
+                        "item_prototypes": [
+                            {
+                                "name": "State 1 of Power Supply sensor {#SENSOR_NAME}",
+                                "type": "TRAP",
+                                "key": "state1[Power Supply.{#SENSOR_NAME}]",
+                                "delay": "0",
+                                "applications": [
+                                    {
+                                        "name": "Power Supply Sensors"
+                                    }
+                                ],
+                                "valuemap": {
+                                    "name": "IPMISensorState"
+                                }
+                            },
+                            {
+                                "name": "State 2 of Power Supply sensor {#SENSOR_NAME}",
+                                "type": "TRAP",
+                                "key": "state2[Power Supply.{#SENSOR_NAME}]",
+                                "delay": "0",
+                                "applications": [
+                                    {
+                                        "name": "Power Supply Sensors"
+                                    }
+                                ],
+                                "valuemap": {
+                                    "name": "IPMISensorState"
+                                }
+                            },
+                            {
+                                "name": "State 3 of Power Supply sensor {#SENSOR_NAME}",
+                                "type": "TRAP",
+                                "key": "state3[Power Supply.{#SENSOR_NAME}]",
+                                "delay": "0",
+                                "applications": [
+                                    {
+                                        "name": "Power Supply Sensors"
+                                    }
+                                ],
+                                "valuemap": {
+                                    "name": "IPMISensorState"
+                                }
+                            },
+                            {
+                                "name": "State 4 of Power Supply sensor {#SENSOR_NAME}",
+                                "type": "TRAP",
+                                "key": "state4[Power Supply.{#SENSOR_NAME}]",
+                                "delay": "0",
+                                "applications": [
+                                    {
+                                        "name": "Power Supply Sensors"
+                                    }
+                                ],
+                                "valuemap": {
+                                    "name": "IPMISensorState"
+                                }
+                            },
+                            {
+                                "name": "State 5 of Power Supply sensor {#SENSOR_NAME}",
+                                "type": "TRAP",
+                                "key": "state5[Power Supply.{#SENSOR_NAME}]",
+                                "delay": "0",
+                                "applications": [
+                                    {
+                                        "name": "Power Supply Sensors"
+                                    }
+                                ],
+                                "valuemap": {
+                                    "name": "IPMISensorState"
+                                }
+                            },
+                            {
+                                "name": "Value of Power Supply sensor {#SENSOR_NAME}",
+                                "type": "TRAP",
+                                "key": "value[Power Supply.{#SENSOR_NAME}]",
+                                "delay": "0",
+                                "value_type": "FLOAT",
+                                "applications": [
+                                    {
+                                        "name": "Power Supply Sensors"
+                                    }
+                                ]
+                            }
+                        ],
+                        "trigger_prototypes": [
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Power Supply.{#SENSOR_NAME}].last()}=4 or {Chassis by IPMI Pyipmimon:state2[Power Supply.{#SENSOR_NAME}].last()}=4 or {Chassis by IPMI Pyipmimon:state3[Power Supply.{#SENSOR_NAME}].last()}=4 or {Chassis by IPMI Pyipmimon:state4[Power Supply.{#SENSOR_NAME}].last()}=4 or {Chassis by IPMI Pyipmimon:state5[Power Supply.{#SENSOR_NAME}].last()}=4",
+                                "name": "State of Power Supply sensor {#SENSOR_NAME} is Not redundant",
+                                "priority": "AVERAGE"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Power Supply.{#SENSOR_NAME}].last()}=5 or {Chassis by IPMI Pyipmimon:state2[Power Supply.{#SENSOR_NAME}].last()}=5 or {Chassis by IPMI Pyipmimon:state3[Power Supply.{#SENSOR_NAME}].last()}=5 or {Chassis by IPMI Pyipmimon:state4[Power Supply.{#SENSOR_NAME}].last()}=5 or {Chassis by IPMI Pyipmimon:state5[Power Supply.{#SENSOR_NAME}].last()}=5",
+                                "name": "State of Power Supply sensor {#SENSOR_NAME} is Power input lost",
+                                "priority": "AVERAGE"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Power Supply.{#SENSOR_NAME}].last()}=15 or {Chassis by IPMI Pyipmimon:state2[Power Supply.{#SENSOR_NAME}].last()}=15 or {Chassis by IPMI Pyipmimon:state3[Power Supply.{#SENSOR_NAME}].last()}=15 or {Chassis by IPMI Pyipmimon:state4[Power Supply.{#SENSOR_NAME}].last()}=15 or {Chassis by IPMI Pyipmimon:state5[Power Supply.{#SENSOR_NAME}].last()}=15",
+                                "name": "State of Power Supply sensor {#SENSOR_NAME} is Power off",
+                                "priority": "AVERAGE"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "IPMI System Firmware Sensors",
+                        "type": "TRAP",
+                        "key": "ipmi.sensors.SystemFirmware.discovery",
+                        "delay": "0",
+                        "lifetime": "3d",
+                        "item_prototypes": [
+                            {
+                                "name": "State 1 of System Firmware sensor {#SENSOR_NAME}",
+                                "type": "TRAP",
+                                "key": "state1[System Firmware.{#SENSOR_NAME}]",
+                                "delay": "0",
+                                "applications": [
+                                    {
+                                        "name": "System Firmware"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "State 2 of System Firmware sensor {#SENSOR_NAME}",
+                                "type": "TRAP",
+                                "key": "state2[System Firmware.{#SENSOR_NAME}]",
+                                "delay": "0",
+                                "applications": [
+                                    {
+                                        "name": "System Firmware"
+                                    }
+                                ],
+                                "valuemap": {
+                                    "name": "IPMISensorState"
+                                }
+                            },
+                            {
+                                "name": "State 3 of System Firmware sensor {#SENSOR_NAME}",
+                                "type": "TRAP",
+                                "key": "state3[System Firmware.{#SENSOR_NAME}]",
+                                "delay": "0",
+                                "applications": [
+                                    {
+                                        "name": "System Firmware"
+                                    }
+                                ],
+                                "valuemap": {
+                                    "name": "IPMISensorState"
+                                }
+                            },
+                            {
+                                "name": "State 4 of System Firmware sensor {#SENSOR_NAME}",
+                                "type": "TRAP",
+                                "key": "state4[System Firmware.{#SENSOR_NAME}]",
+                                "delay": "0",
+                                "applications": [
+                                    {
+                                        "name": "System Firmware"
+                                    }
+                                ],
+                                "valuemap": {
+                                    "name": "IPMISensorState"
+                                }
+                            },
+                            {
+                                "name": "State 5 of System Firmware sensor {#SENSOR_NAME}",
+                                "type": "TRAP",
+                                "key": "state5[System Firmware.{#SENSOR_NAME}]",
+                                "delay": "0",
+                                "applications": [
+                                    {
+                                        "name": "System Firmware"
+                                    }
+                                ],
+                                "valuemap": {
+                                    "name": "IPMISensorState"
+                                }
+                            },
+                            {
+                                "name": "Value of System Firmware sensor {#SENSOR_NAME}",
+                                "type": "TRAP",
+                                "key": "value[System Firmware.{#SENSOR_NAME}]",
+                                "delay": "0",
+                                "value_type": "FLOAT",
+                                "applications": [
+                                    {
+                                        "name": "System Firmware"
+                                    }
+                                ]
+                            }
+                        ],
+                        "trigger_prototypes": [
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[System Firmware.{#SENSOR_NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state2[System Firmware.{#SENSOR_NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state3[System Firmware.{#SENSOR_NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state4[System Firmware.{#SENSOR_NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state5[System Firmware.{#SENSOR_NAME}].diff()}=1",
+                                "name": "State of System Firmware {#SENSOR_NAME} is changed",
+                                "priority": "AVERAGE"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[System Firmware.{#SENSOR_NAME}].last()}=13 or {Chassis by IPMI Pyipmimon:state2[System Firmware.{#SENSOR_NAME}].last()}=13 or {Chassis by IPMI Pyipmimon:state3[System Firmware.{#SENSOR_NAME}].last()}=13 or {Chassis by IPMI Pyipmimon:state4[System Firmware.{#SENSOR_NAME}].last()}=13 or {Chassis by IPMI Pyipmimon:state5[System Firmware.{#SENSOR_NAME}].last()}=13",
+                                "name": "State of System Firmware {#SENSOR_NAME} is Progress",
+                                "priority": "WARNING"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[System Firmware.{#SENSOR_NAME}].last()}=9 or {Chassis by IPMI Pyipmimon:state2[System Firmware.{#SENSOR_NAME}].last()}=9 or {Chassis by IPMI Pyipmimon:state3[System Firmware.{#SENSOR_NAME}].last()}=9 or {Chassis by IPMI Pyipmimon:state4[System Firmware.{#SENSOR_NAME}].last()}=9 or {Chassis by IPMI Pyipmimon:state5[System Firmware.{#SENSOR_NAME}].last()}=9",
+                                "name": "State of System Firmware {#SENSOR_NAME} is Successful software/firmware change",
+                                "priority": "WARNING"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "IPMI Temperature Sensors",
+                        "type": "TRAP",
+                        "key": "ipmi.sensors.Temperature.discovery",
+                        "delay": "0",
+                        "lifetime": "3d",
+                        "item_prototypes": [
+                            {
+                                "name": "State 1 of Temperature sensor {#SENSOR_NAME}",
+                                "type": "TRAP",
+                                "key": "state1[Temperature.{#SENSOR_NAME}]",
+                                "delay": "0",
+                                "applications": [
+                                    {
+                                        "name": "Temperature Sensors"
+                                    }
+                                ],
+                                "valuemap": {
+                                    "name": "IPMISensorState"
+                                },
+                                "trigger_prototypes": [
+                                    {
+                                        "expression": "not ({last()}=2 or {last()}=100)",
+                                        "name": "State of Temperature {#SENSOR_NAME} is not Ok",
+                                        "priority": "AVERAGE"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "Value of Temperature sensor {#SENSOR_NAME}",
+                                "type": "TRAP",
+                                "key": "value[Temperature.{#SENSOR_NAME}]",
+                                "delay": "0",
+                                "value_type": "FLOAT",
+                                "units": "degrees Celsius",
+                                "applications": [
+                                    {
+                                        "name": "Temperature Sensors"
+                                    }
+                                ],
+                                "trigger_prototypes": [
+                                    {
+                                        "expression": "{last()}>80",
+                                        "name": "Value of sensor {#SENSOR_TYPE}.{#SENSOR_NAME} on {HOSTNAME} exceeded 80",
+                                        "priority": "HIGH"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "name": "IPMI Voltage Sensors",
+                        "type": "TRAP",
+                        "key": "ipmi.sensors.Voltage.discovery",
+                        "delay": "0",
+                        "lifetime": "3d",
+                        "item_prototypes": [
+                            {
+                                "name": "State 1 of Voltage sensor {#SENSOR_NAME}",
+                                "type": "TRAP",
+                                "key": "state1[Voltage.{#SENSOR_NAME}]",
+                                "delay": "0",
+                                "applications": [
+                                    {
+                                        "name": "Voltage Sensors"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "Value of Voltage sensor {#SENSOR_NAME}",
+                                "type": "TRAP",
+                                "key": "value[Voltage.{#SENSOR_NAME}]",
+                                "delay": "0",
+                                "value_type": "FLOAT",
+                                "units": "V",
+                                "applications": [
+                                    {
+                                        "name": "Voltage Sensors"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        "value_maps": [
+            {
+                "name": "IPMISensorState",
+                "mappings": [
+                    {
+                        "value": "0",
+                        "newvalue": "Absent"
+                    },
+                    {
+                        "value": "1",
+                        "newvalue": "Present"
+                    },
+                    {
+                        "value": "2",
+                        "newvalue": "Ok"
+                    },
+                    {
+                        "value": "3",
+                        "newvalue": "Redundant"
+                    },
+                    {
+                        "value": "4",
+                        "newvalue": "Not redundant"
+                    },
+                    {
+                        "value": "5",
+                        "newvalue": "Power input lost"
+                    },
+                    {
+                        "value": "6",
+                        "newvalue": "Connected"
+                    },
+                    {
+                        "value": "7",
+                        "newvalue": "Deasserted"
+                    },
+                    {
+                        "value": "8",
+                        "newvalue": "Predictive failure deasserted"
+                    },
+                    {
+                        "value": "9",
+                        "newvalue": "Successful software/firmware change"
+                    },
+                    {
+                        "value": "10",
+                        "newvalue": "Event log full"
+                    },
+                    {
+                        "value": "11",
+                        "newvalue": "Event log nearly full"
+                    },
+                    {
+                        "value": "12",
+                        "newvalue": "lower critical threshold"
+                    },
+                    {
+                        "value": "13",
+                        "newvalue": "Progress"
+                    },
+                    {
+                        "value": "14",
+                        "newvalue": "Asserted"
+                    },
+                    {
+                        "value": "15",
+                        "newvalue": "Power off"
+                    },
+                    {
+                        "value": "16",
+                        "newvalue": "Predictive drive failure"
+                    },
+                    {
+                        "value": "17",
+                        "newvalue": "Drive in critical array"
+                    },
+                    {
+                        "value": "18",
+                        "newvalue": "Drive fault"
+                    },
+                    {
+                        "value": "19",
+                        "newvalue": "Rebuild in progress"
+                    },
+                    {
+                        "value": "20",
+                        "newvalue": "Log clear"
+                    },
+                    {
+                        "value": "21",
+                        "newvalue": "No bootable media"
+                    },
+                    {
+                        "value": "22",
+                        "newvalue": "Correctable memory error logging limit reached"
+                    },
+                    {
+                        "value": "23",
+                        "newvalue": "Memory Logging Limit Reached"
+                    },
+                    {
+                        "value": "24",
+                        "newvalue": "Slot/connector installed"
+                    },
+                    {
+                        "value": "25",
+                        "newvalue": "Spare"
+                    },
+                    {
+                        "value": "26",
+                        "newvalue": "Chassis intrusion"
+                    },
+                    {
+                        "value": "27",
+                        "newvalue": "Bus uncorrectable error"
+                    },
+                    {
+                        "value": "28",
+                        "newvalue": "Uncorrectable error"
+                    },
+                    {
+                        "value": "29",
+                        "newvalue": "Device disabled"
+                    },
+                    {
+                        "value": "30",
+                        "newvalue": "Scrub failed"
+                    },
+                    {
+                        "value": "31",
+                        "newvalue": "Non-Critical"
+                    },
+                    {
+                        "value": "100",
+                        "newvalue": "Normal"
+                    }
+                ]
+            }
+        ]
+    }
+}
