@@ -19,7 +19,7 @@ Requirements
 
 Installation
 ============
-1) Give access to servers hardware (IMM/iBMC etc.) for monitoring user with permissions to Remote Console Access.
+1) Give access to servers hardware (IMM/iBMC etc.) for monitoring user with permissions to Remote Console Access;
 
 2) Clone pyipmimon repo to directory /etc/zabbix/externalscripts of monitoring server:
 ```

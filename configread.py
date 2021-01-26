@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
-import configparser
+# Python module for load parameters from main config file
 
 
 def configread(conffile, section, *parameters):
+
+    import configparser
 
     # read configuration file
     config = configparser.RawConfigParser()
