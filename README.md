@@ -2,7 +2,7 @@ Description
 ===========
 Zabbix physical server sensors monitoring via IPMI
 
-Tested with IBM x3550/x3755, Lenovo SR570/SR630
+Tested with IBM x3550/x3650/x3755, Lenovo SR570/SR630
 
 
 Requirements
@@ -12,7 +12,7 @@ Requirements
 
 2) python module pyghmi: connect and get information from iBMC/IMM server cards via IPMI
 
-3) zabbix-server (tested with versions 4.4-5.2)
+3) zabbix-server (tested with versions 5.2)
 
 4) python module py-zabbix: sending traps to zabbix
 
@@ -67,8 +67,7 @@ zabbix    776392  0.2  0.4 2049600 112064 ?      S    дек07  63:57 /usr/sbin/
 zabbix    776393  0.2  0.4 2049412 111836 ?      S    дек07  63:31 /usr/sbin/zabbix_server: trapper #5 [processed data in 0.000176 sec, waiting for connection]
 ```
 
-8) Import template Chassis by IPMI Pyipmimon.json to Zabbix, if use Zabbix 5.2,
-and Template IPMI Pyipmimon.xml (no more support) for Zabbix 4.4;
+8) Import template Chassis by IPMI Pyipmimon.json to Zabbix;
 
 9) Create your IPMI cards hosts in Zabbix and link this template to them.
 In host configuration set parameters "Host name" and "IP address" for Agent Interface.
