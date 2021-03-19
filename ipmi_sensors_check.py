@@ -45,7 +45,7 @@ def main():
     for sensor_data in sensors_data:
         print(f'type: {sensor_data.type}, name: {sensor_data.name}, '
               f'health: {sensor_data.health}, states: {sensor_data.states}, '
-              f'state_ids: {sensor_data.state_ids}, imprecision={sensor_data.imprecision}')
+              f'state_ids: {sensor_data.state_ids}, imprecision: {sensor_data.imprecision}')
 
     device_list_file.close()
 
