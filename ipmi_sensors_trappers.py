@@ -11,135 +11,114 @@
 #
 
 import os
-import socket
+import sys
 
-from collections import defaultdict
 from configread import configread
+from functions import zabbix_send
+from json import load
 from pynetdevices import IPMICard
-from pyslack import slack_post
-from pyzabbix import ZabbixMetric, ZabbixSender
+from pyzabbix import ZabbixMetric
 
 
-# set config file name
-conf_file = '/etc/zabbix/externalscripts/pyipmimon/conf.d/pyipmimon.conf'
+def main():
 
-# read network device parameters from config and save it to dict
-nd_parameters = configread(conf_file, 'NetworkDevice', 'device_file',
-                           'login', 'password', 'slack_hook',
-                           'zabbix_server', 'printing')
+    # set project name as current directory name
+    project = os.path.abspath(__file__).split('/')[-2]
 
-# get flag for debug printing from config
-printing = eval(nd_parameters['printing'])
+    # get config file name
+    conf_file = (f'/etc/zabbix/externalscripts/{project}/{project}.conf')
 
-# open file with list of monitored IPMI cards
-device_list_file = open(nd_parameters['device_file'])
+    # read parameters of IPMI cards and zabbix from config file and save it to dict
+    nd_parameters = configread(conf_file, 'NetworkDevice', 'device_file',
+                               'login', 'password', 'printing')
 
-# parse the IPMI cards list
-for device_line in device_list_file:
-    device_params = device_line.split(':')
-    device_type = device_params[0]
-    device_name = device_params[1]
-    device_ip = device_params[2].strip('\n')
+    # read sensor states from config and save it to another dict
+    sensor_parameters = configread(
+        conf_file, 'IPMI Sensors', 'sensor_states_map_file')
 
-    # connect to each IPMI card, get conn object
-    if device_type in ('ibmc', 'ilo', 'imm'):
-        device = IPMICard(device_name, device_ip, nd_parameters['slack_hook'],
-                          nd_parameters['login'], nd_parameters['password'])
+    # get flag for debug printing from config
+    printing = eval(nd_parameters['printing'])
 
-    # dict of sensor states
-    sensor_states = {
-        "Absent": 0,
-        "Present": 1,
-        "Ok": 2,
-        "Redundant": 3,
-        "Not redundant": 4,
-        "Power input lost": 5,
-        "Connected": 6,
-        "Deasserted": 7,
-        "Predictive failure deasserted": 8,
-        "Successful software/firmware change": 9,
-        "Event log full": 10,
-        "Event log nearly full": 11,
-        "lower critical threshold": 12,
-        "Progress": 13,
-        "Asserted": 14,
-        "Power off": 15,
-        "Predictive drive failure": 16,
-        "Drive in critical array": 17,
-        "Drive fault": 18,
-        "Rebuild in progress": 19,
-        "Log clear": 20,
-        "No bootable media": 21,
-        "Correctable memory error logging limit reached": 22,
-        "Memory Logging Limit Reached": 23,
-        "Slot/connector installed": 24,
-        "Spare": 25,
-        "Chassis intrusion": 26,
-        "Bus uncorrectable error": 27,
-        "Uncorrectable error": 28,
-        "Device disabled": 29,
-        "Scrub failed": 30,
-        "Non-Critical": 31,
-    }
+    # get variables
+    login = nd_parameters['login']
+    password = nd_parameters['password']
+    software = sys.argv[0]
 
-    packet = []
+    # form dictionary of matching sensor states with returned values
+    with open(sensor_parameters['sensor_states_map_file'], "r") as sensor_states_map_file:
+        sensor_states = load(sensor_states_map_file)
 
-    # # connect to device, get sensors data and create dict of sensors values
-    sensors_data = device.Connect().get_sensor_data()
+    # open file with list of monitored IPMI cards
+    device_list_file = open(nd_parameters['device_file'])
 
-    # parse sensors values and form data for send to zabbix
-    for sensor_data in sensors_data:
-        sensor_state = 100
-        sensor_dict = {}
-        for state_counter in range(1, 6):
-            trapper_value = sensor_state
-            trapper_key = 'state' + \
-                str(state_counter) + '[' + sensor_data.type + \
-                '.' + sensor_data.name.rstrip('\x00') + ']'
-            sensor_dict[trapper_key] = trapper_value
-        state_counter = 1
-        if len(sensor_data.states):
-            # add sensors states for sending to zabbix
-            for sensor_data_state in sensor_data.states:
-                trapper_value = sensor_states[sensor_data_state]
-                trapper_key = 'state' + \
-                    str(state_counter) + '[' + sensor_data.type + \
-                    '.' + sensor_data.name.rstrip('\x00') + ']'
-                sensor_dict[trapper_key] = trapper_value
-                state_counter += 1
+    # unpack IPMI cards list to variables
+    for device_line in device_list_file:
+        device_type, device_name, device_ip = device_line.split(':')
+        device_ip = device_ip.rstrip('\n')
 
-        for trapper_key in sensor_dict:
-            packet.append(ZabbixMetric(
-                device_name, trapper_key, sensor_dict[trapper_key]))
+        # connect to each IPMI card, get conn object
+        if device_type in ('ibmc', 'ilo', 'imm'):
+            device = IPMICard(device_name, device_ip, login, password)
 
-            # print data for visual check
-            if printing:
-                print(device_name)
-                print(trapper_key)
-                print(sensor_dict[trapper_key])
+        packet = []
 
-        # add values if exist for sending to zabbix
-        if sensor_data.value:
-            trapper_key = 'value' + \
-                '[' + sensor_data.type + '.' + \
-                sensor_data.name.rstrip('\x00') + ']'
-            trapper_value = sensor_data.value
-            packet.append(ZabbixMetric(
-                device_name, trapper_key, trapper_value))
+        # connect to device, get sensors data and create dict of sensors values
+        sensors_data = device.Connect().get_sensor_data()
 
-            # print data for visual check
-            if printing:
-                print(device_name)
-                print(trapper_key)
-                print(trapper_value)
+        # parse sensors values and form data for send to zabbix
+        for sensor_data in sensors_data:
+            sensor_state = 100
+            sensor_dict = {}
 
-    # trying send data to zabbix
-    try:
-        result = ZabbixSender(nd_parameters['zabbix_server']).send(packet)
-    except ConnectionRefusedError as error:
-        slack_post(nd_parameters['slack_hook'],
-                   f"Unexpected exception in \"ZabbixSender({nd_parameters['zabbix_server']}.send(packet)\": {str(error)}",
-                   nd_parameters['zabbix_server'],
-                   socket.gethostbyname(nd_parameters['zabbix_server'])
-                   )
-        exit(1)
+            # fill the dict of states with default values = 100 (Normal)
+            for state_counter in range(1, 4):
+                type = sensor_data.type
+                name = sensor_data.name.rstrip('\x00')
+                trapper_key = f'state{state_counter}[{type}.{name}]'
+                sensor_dict[trapper_key] = sensor_state
+
+            state_counter = 1
+
+            # check that sensor return one or more states and save this states to dict
+            if len(sensor_data.states):
+                for sensor_data_state in sensor_data.states:
+                    type = sensor_data.type
+                    name = sensor_data.name.rstrip('\x00')
+                    trapper_key = f'state{state_counter}[{type}.{name}]'
+                    sensor_dict[trapper_key] = sensor_states[sensor_data_state]
+                    state_counter += 1
+
+            # add sensor states to packet for sending to zabbix
+            for trapper_key, trapper_value in sensor_dict.items():
+                packet.append(ZabbixMetric(
+                    device_name, trapper_key, trapper_value))
+
+                # print data for visual check
+                if printing:
+                    print(device_name)
+                    print(trapper_key)
+                    print(trapper_value)
+
+            # add values if exist to packet for sending to zabbix
+            if sensor_data.value:
+                type = sensor_data.type
+                name = sensor_data.name.rstrip('\x00')
+                trapper_key = f'value[{type}.{name}]'
+                trapper_value = sensor_data.value
+                packet.append(ZabbixMetric(
+                    device_name, trapper_key, trapper_value))
+
+                # print data for visual check
+                if printing:
+                    print(device_name)
+                    print(trapper_key)
+                    print(trapper_value)
+
+        # trying send data to zabbix
+        zabbix_send(packet, printing, software)
+
+    device_list_file.close()
+
+
+if __name__ == "__main__":
+    main()
