@@ -8,13 +8,15 @@ Tested with IBM x3550/x3755, Lenovo SR570/SR630
 Requirements
 ============
 
-1) python >= 3.6
+1) python >= 3.8
 
 2) python module pyghmi: connect and get information from iBMC/IMM server cards via IPMI
 
 3) zabbix-server (tested with versions 4.4-5.2)
 
 4) python module py-zabbix: sending traps to zabbix
+
+5) python module requests: sending alarms to slack
 
 
 Installation
