@@ -30,8 +30,7 @@ def main():
 
     # read parameters of IPMI cards and zabbix from config file and save it to dict
     nd_parameters = configread(conf_file, 'NetworkDevice', 'device_file',
-                               'login', 'password', 'zabbix_server',
-                               'printing')
+                               'login', 'password', 'printing')
 
     # get flag for debug printing from config
     printing = eval(nd_parameters['printing'])
