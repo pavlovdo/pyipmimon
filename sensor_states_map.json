@@ -31,4 +31,5 @@
         "Device disabled": 29,
         "Scrub failed": 30,
         "Non-Critical": 31,
+        "Unknown": 99
 }

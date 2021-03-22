@@ -85,7 +85,8 @@ def main():
                     type = sensor_data.type
                     name = sensor_data.name.rstrip('\x00')
                     trapper_key = f'state{state_counter}[{type}.{name}]'
-                    sensor_dict[trapper_key] = sensor_states[sensor_data_state]
+                    sensor_dict[trapper_key] = sensor_states.get(
+                        sensor_data_state, 'Unknown')
                     state_counter += 1
 
             # add sensor states to packet for sending to zabbix

@@ -1,7 +1,7 @@
 {
     "zabbix_export": {
         "version": "5.2",
-        "date": "2021-03-17T17:18:39Z",
+        "date": "2021-03-22T11:27:55Z",
         "groups": [
             {
                 "name": "Templates/Server hardware"
@@ -71,7 +71,14 @@
                                 ],
                                 "valuemap": {
                                     "name": "IPMISensorState"
-                                }
+                                },
+                                "trigger_prototypes": [
+                                    {
+                                        "expression": "{nodata(1d)}=0 and {nodata(1h)}=1",
+                                        "name": "No data for an hour from sensor Cable/Interconnect.{#NAME}",
+                                        "priority": "WARNING"
+                                    }
+                                ]
                             },
                             {
                                 "name": "State 2 of Cable/Interconnect sensor {#NAME}",
@@ -116,9 +123,14 @@
                         ],
                         "trigger_prototypes": [
                             {
-                                "expression": "not ({Chassis by IPMI Pyipmimon:state1[Cable/Interconnect.{#NAME}].last()}=1 or {Chassis by IPMI Pyipmimon:state1[Cable/Interconnect.{#NAME}].last()}=6 or {Chassis by IPMI Pyipmimon:state1[Cable/Interconnect.{#NAME}].last()}=100 or {Chassis by IPMI Pyipmimon:state2[Cable/Interconnect.{#NAME}].last()}=1 or {Chassis by IPMI Pyipmimon:state2[Cable/Interconnect.{#NAME}].last()}=6 or {Chassis by IPMI Pyipmimon:state2[Cable/Interconnect.{#NAME}].last()}=100 or {Chassis by IPMI Pyipmimon:state3[Cable/Interconnect.{#NAME}].last()}=1 or {Chassis by IPMI Pyipmimon:state3[Cable/Interconnect.{#NAME}].last()}=6 or {Chassis by IPMI Pyipmimon:state3[Cable/Interconnect.{#NAME}].last()}=100)",
-                                "name": "State of Cable/Interconnect sensor {#NAME} is not Present/Normal/Connected",
-                                "priority": "INFO"
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Cable/Interconnect.{#NAME}].last()}=99 or {Chassis by IPMI Pyipmimon:state2[Cable/Interconnect.{#NAME}].last()}=99 or {Chassis by IPMI Pyipmimon:state3[Cable/Interconnect.{#NAME}].last()}=99",
+                                "name": "New unknown state of sensor Cable/Interconnect.{#NAME}",
+                                "priority": "AVERAGE"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Cable/Interconnect.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state2[Cable/Interconnect.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state3[Cable/Interconnect.{#NAME}].diff()}=1",
+                                "name": "State of sensor Cable/Interconnect.{#NAME} is changed",
+                                "priority": "AVERAGE"
                             }
                         ]
                     },
@@ -141,7 +153,14 @@
                                 ],
                                 "valuemap": {
                                     "name": "IPMISensorState"
-                                }
+                                },
+                                "trigger_prototypes": [
+                                    {
+                                        "expression": "{nodata(1d)}=0 and {nodata(1h)}=1",
+                                        "name": "No data for an hour from sensor Cooling Device.{#NAME}",
+                                        "priority": "WARNING"
+                                    }
+                                ]
                             },
                             {
                                 "name": "State 2 of Cooling Device sensor {#NAME}",
@@ -186,9 +205,19 @@
                         ],
                         "trigger_prototypes": [
                             {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Cooling Device.{#NAME}].last()}=99 or {Chassis by IPMI Pyipmimon:state2[Cooling Device.{#NAME}].last()}=99 or {Chassis by IPMI Pyipmimon:state3[Cooling Device.{#NAME}].last()}=99",
+                                "name": "New unknown state of sensor Cooling Device.{#NAME}",
+                                "priority": "AVERAGE"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Cooling Device.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state2[Cooling Device.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state3[Cooling Device.{#NAME}].diff()}=1",
+                                "name": "State of sensor Cooling Device.{#NAME} is changed",
+                                "priority": "AVERAGE"
+                            },
+                            {
                                 "expression": "{Chassis by IPMI Pyipmimon:state1[Cooling Device.{#NAME}].last()}=4 or {Chassis by IPMI Pyipmimon:state2[Cooling Device.{#NAME}].last()}=4 or {Chassis by IPMI Pyipmimon:state3[Cooling Device.{#NAME}].last()}=4",
-                                "name": "State of Cooling Device sensor {#NAME} is Not redundant",
-                                "priority": "INFO"
+                                "name": "State of sensor Cooling Device.{#NAME} is not redundant",
+                                "priority": "AVERAGE"
                             }
                         ]
                     },
@@ -207,6 +236,13 @@
                                 "applications": [
                                     {
                                         "name": "Current Sensors"
+                                    }
+                                ],
+                                "trigger_prototypes": [
+                                    {
+                                        "expression": "{nodata(1d)}=0 and {nodata(1h)}=1",
+                                        "name": "No data for an hour from sensor Current.{#NAME}",
+                                        "priority": "WARNING"
                                     }
                                 ]
                             },
@@ -251,6 +287,23 @@
                                     }
                                 ]
                             }
+                        ],
+                        "trigger_prototypes": [
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Current.{#NAME}].last()}=99 or {Chassis by IPMI Pyipmimon:state2[Current.{#NAME}].last()}=99 or {Chassis by IPMI Pyipmimon:state3[Current.{#NAME}].last()}=99",
+                                "name": "New unknown state of sensor Current.{#NAME}",
+                                "priority": "AVERAGE"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Current.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state2[Current.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state3[Current.{#NAME}].diff()}=1",
+                                "name": "State of sensor Current.{#NAME} is changed",
+                                "priority": "AVERAGE"
+                            },
+                            {
+                                "expression": "not ({Chassis by IPMI Pyipmimon:state1[Current.{#NAME}].last()}=1 or {Chassis by IPMI Pyipmimon:state1[Current.{#NAME}].last()}=6 or {Chassis by IPMI Pyipmimon:state1[Current.{#NAME}].last()}=100 or {Chassis by IPMI Pyipmimon:state2[Current.{#NAME}].last()}=1 or {Chassis by IPMI Pyipmimon:state2[Current.{#NAME}].last()}=6 or {Chassis by IPMI Pyipmimon:state2[Current.{#NAME}].last()}=100 or {Chassis by IPMI Pyipmimon:state3[Current.{#NAME}].last()}=1 or {Chassis by IPMI Pyipmimon:state3[Current.{#NAME}].last()}=6 or {Chassis by IPMI Pyipmimon:state3[Current.{#NAME}].last()}=100)",
+                                "name": "State of sensor Current.{#NAME} is not good",
+                                "priority": "AVERAGE"
+                            }
                         ]
                     },
                     {
@@ -276,15 +329,8 @@
                                 "trigger_prototypes": [
                                     {
                                         "expression": "{nodata(1d)}=0 and {nodata(1h)}=1",
-                                        "name": "No data for an hour from {#TYPE}.{#NAME}",
+                                        "name": "No data for an hour from sensor {#TYPE}.{#NAME}",
                                         "priority": "WARNING",
-                                        "description": "Last value: {ITEM.LASTVALUE1}"
-                                    },
-                                    {
-                                        "expression": "not ({last()}=0 or {last()}=1 or {last()}=2 or {last()}=3 or {last()}=6 or {last()}=7 or {last()}=9 or {last()}=13 or {last()}=14 or {last()}=20 or {last()}=100)",
-                                        "name": "State of {#TYPE}.{#NAME} is not good",
-                                        "status": "DISABLED",
-                                        "priority": "AVERAGE",
                                         "description": "Last value: {ITEM.LASTVALUE1}"
                                     }
                                 ]
@@ -334,6 +380,18 @@
                                     }
                                 ]
                             }
+                        ],
+                        "trigger_prototypes": [
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[{#TYPE}.{#NAME}].last()}=99 or {Chassis by IPMI Pyipmimon:state2[{#TYPE}.{#NAME}].last()}=99 or {Chassis by IPMI Pyipmimon:state3[{#TYPE}.{#NAME}].last()}=99",
+                                "name": "New unknown state of sensor {#TYPE}.{#NAME}",
+                                "priority": "AVERAGE"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[{#TYPE}.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state2[{#TYPE}.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state3[{#TYPE}.{#NAME}].diff()}=1",
+                                "name": "State of sensor {#TYPE}.{#NAME} is changed",
+                                "priority": "AVERAGE"
+                            }
                         ]
                     },
                     {
@@ -355,7 +413,14 @@
                                 ],
                                 "valuemap": {
                                     "name": "IPMISensorState"
-                                }
+                                },
+                                "trigger_prototypes": [
+                                    {
+                                        "expression": "{nodata(1d)}=0 and {nodata(1h)}=1",
+                                        "name": "No data for an hour from sensor Drive Bay.{#NAME}",
+                                        "priority": "WARNING"
+                                    }
+                                ]
                             },
                             {
                                 "name": "State 2 of Drive Bay sensor {#NAME}",
@@ -400,6 +465,11 @@
                         ],
                         "trigger_prototypes": [
                             {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Drive Bay.{#NAME}].last()}=99 or {Chassis by IPMI Pyipmimon:state2[Drive Bay.{#NAME}].last()}=99 or {Chassis by IPMI Pyipmimon:state3[Drive Bay.{#NAME}].last()}=99",
+                                "name": "New unknown state of sensor Drive Bay.{#NAME}",
+                                "priority": "AVERAGE"
+                            },
+                            {
                                 "expression": "{Chassis by IPMI Pyipmimon:state1[Drive Bay.{#NAME}].last()}=18 or {Chassis by IPMI Pyipmimon:state2[Drive Bay.{#NAME}].last()}=18 or {Chassis by IPMI Pyipmimon:state3[Drive Bay.{#NAME}].last()}=18",
                                 "name": "State of Drive Bay sensor {#NAME} is Drive fault",
                                 "priority": "AVERAGE"
@@ -417,6 +487,11 @@
                             {
                                 "expression": "{Chassis by IPMI Pyipmimon:state1[Drive Bay.{#NAME}].last()}=19 or {Chassis by IPMI Pyipmimon:state2[Drive Bay.{#NAME}].last()}=19 or {Chassis by IPMI Pyipmimon:state3[Drive Bay.{#NAME}].last()}=19",
                                 "name": "State of Drive Bay sensor {#NAME} is Rebuild in progress",
+                                "priority": "AVERAGE"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Drive Bay.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state2[Drive Bay.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state3[Drive Bay.{#NAME}].diff()}=1",
+                                "name": "State of sensor Drive Bay{#NAME} is changed",
                                 "priority": "AVERAGE"
                             }
                         ]
@@ -449,7 +524,14 @@
                                 ],
                                 "valuemap": {
                                     "name": "IPMISensorState"
-                                }
+                                },
+                                "trigger_prototypes": [
+                                    {
+                                        "expression": "{nodata(1d)}=0 and {nodata(1h)}=1",
+                                        "name": "No data for an hour from sensor Fan.{#NAME}",
+                                        "priority": "WARNING"
+                                    }
+                                ]
                             },
                             {
                                 "name": "State 2 of Fan sensor {#NAME}",
@@ -494,25 +576,14 @@
                         ],
                         "trigger_prototypes": [
                             {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Fan.{#NAME}].last()}=99 or {Chassis by IPMI Pyipmimon:state2[Fan.{#NAME}].last()}=99 or {Chassis by IPMI Pyipmimon:state3[Fan.{#NAME}].last()}=99",
+                                "name": "New unknown state of sensor Fan.{#NAME}",
+                                "priority": "AVERAGE"
+                            },
+                            {
                                 "expression": "{Chassis by IPMI Pyipmimon:state1[Fan.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state2[Fan.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state3[Fan.{#NAME}].diff()}=1",
                                 "name": "State of Fan sensor {#NAME} is changed",
                                 "priority": "AVERAGE"
-                            }
-                        ]
-                    },
-                    {
-                        "name": "IPMI Other Sensors",
-                        "type": "TRAP",
-                        "key": "ipmi.sensors.Other.discovery",
-                        "delay": "0",
-                        "lifetime": "3d",
-                        "item_prototypes": [
-                            {
-                                "name": "Value of Other sensor {#NAME}",
-                                "type": "TRAP",
-                                "key": "value.other[{#NAME}]",
-                                "delay": "0",
-                                "value_type": "FLOAT"
                             }
                         ]
                     },
@@ -535,7 +606,14 @@
                                 ],
                                 "valuemap": {
                                     "name": "IPMISensorState"
-                                }
+                                },
+                                "trigger_prototypes": [
+                                    {
+                                        "expression": "{nodata(1d)}=0 and {nodata(1h)}=1",
+                                        "name": "No data for an hour from sensor Power Supply.{#NAME}",
+                                        "priority": "WARNING"
+                                    }
+                                ]
                             },
                             {
                                 "name": "State 2 of Power Supply sensor {#NAME}",
@@ -577,6 +655,18 @@
                                     }
                                 ]
                             }
+                        ],
+                        "trigger_prototypes": [
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Power Supply.{#NAME}].last()}=99 or {Chassis by IPMI Pyipmimon:state2[Power Supply.{#NAME}].last()}=99 or {Chassis by IPMI Pyipmimon:state3[Power Supply.{#NAME}].last()}=99",
+                                "name": "New unknown state of sensor Power Supply.{#NAME}",
+                                "priority": "AVERAGE"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Power Supply.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state2[Power Supply.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state3[Power Supply.{#NAME}].diff()}=1",
+                                "name": "State of sensor Power Supply.{#NAME} is changed",
+                                "priority": "AVERAGE"
+                            }
                         ]
                     },
                     {
@@ -594,6 +684,13 @@
                                 "applications": [
                                     {
                                         "name": "System Firmware"
+                                    }
+                                ],
+                                "trigger_prototypes": [
+                                    {
+                                        "expression": "{nodata(1d)}=0 and {nodata(1h)}=1",
+                                        "name": "No data for an hour from sensor System Firmware.{#NAME}",
+                                        "priority": "WARNING"
                                     }
                                 ]
                             },
@@ -637,6 +734,18 @@
                                     }
                                 ]
                             }
+                        ],
+                        "trigger_prototypes": [
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[System Firmware.{#NAME}].last()}=99 or {Chassis by IPMI Pyipmimon:state2[System Firmware.{#NAME}].last()}=99 or {Chassis by IPMI Pyipmimon:state3[System Firmware.{#NAME}].last()}=99",
+                                "name": "New unknown state of sensor System Firmware.{#NAME}",
+                                "priority": "AVERAGE"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[System Firmware.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state2[System Firmware.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state3[System Firmware.{#NAME}].diff()}=1",
+                                "name": "State of sensor System Firmware.{#NAME} is changed",
+                                "priority": "AVERAGE"
+                            }
                         ]
                     },
                     {
@@ -658,7 +767,14 @@
                                 ],
                                 "valuemap": {
                                     "name": "IPMISensorState"
-                                }
+                                },
+                                "trigger_prototypes": [
+                                    {
+                                        "expression": "{nodata(1d)}=0 and {nodata(1h)}=1",
+                                        "name": "No data for an hour from sensor Temperature.{#NAME}",
+                                        "priority": "WARNING"
+                                    }
+                                ]
                             },
                             {
                                 "name": "State 2 of Temperature sensor {#NAME}",
@@ -705,8 +821,8 @@
                         ],
                         "trigger_prototypes": [
                             {
-                                "expression": "not ({Chassis by IPMI Pyipmimon:state1[Temperature.{#NAME}].last()}=2 or {Chassis by IPMI Pyipmimon:state1[Temperature.{#NAME}].last()}=100 or {Chassis by IPMI Pyipmimon:state2[Temperature.{#NAME}].last()}=2 or {Chassis by IPMI Pyipmimon:state2[Temperature.{#NAME}].last()}=100 or {Chassis by IPMI Pyipmimon:state3[Temperature.{#NAME}].last()}=2 or {Chassis by IPMI Pyipmimon:state3[Temperature.{#NAME}].last()}=100)",
-                                "name": "State of Temperature {#NAME} is not Ok",
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Temperature.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state2[Temperature.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state3[Temperature.{#NAME}].diff()}=1",
+                                "name": "State of sendor Temperature {#NAME} is changed",
                                 "priority": "AVERAGE"
                             }
                         ]
@@ -726,6 +842,13 @@
                                 "applications": [
                                     {
                                         "name": "Voltage Sensors"
+                                    }
+                                ],
+                                "trigger_prototypes": [
+                                    {
+                                        "expression": "{nodata(1d)}=0 and {nodata(1h)}=1",
+                                        "name": "No data for an hour from sensor Voltage.{#NAME}",
+                                        "priority": "WARNING"
                                     }
                                 ]
                             },
@@ -769,6 +892,18 @@
                                         "name": "Voltage Sensors"
                                     }
                                 ]
+                            }
+                        ],
+                        "trigger_prototypes": [
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Voltage.{#NAME}].last()}=99 or {Chassis by IPMI Pyipmimon:state2[Voltage.{#NAME}].last()}=99 or {Chassis by IPMI Pyipmimon:state3[Voltage.{#NAME}].last()}=99",
+                                "name": "New unknown state of sensor Voltage.{#NAME}",
+                                "priority": "AVERAGE"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Voltage.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state2[Voltage.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state3[Voltage.{#NAME}].diff()}=1",
+                                "name": "State of sensor Voltage.{#NAME} is changed",
+                                "priority": "AVERAGE"
                             }
                         ]
                     }
