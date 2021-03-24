@@ -26,8 +26,8 @@ Installation
 2) Clone pyipmimon repo to directory /etc/zabbix/externalscripts of monitoring server:
 ```
 sudo mkdir -p /etc/zabbix/externalscripts
-cd /etc/zabbix/externalscripts
-sudo git clone https://github.com/pavlovdo/pyipmimon
+sudo git clone https://github.com/pavlovdo/pyipmimon /etc/zabbix/externalscripts/pyipmimon
+cd /etc/zabbix/externalscripts/pyipmimon
 ```
 
 3) A) Check execute permissions for scripts:
