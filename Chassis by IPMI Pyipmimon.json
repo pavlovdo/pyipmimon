@@ -1,7 +1,7 @@
 {
     "zabbix_export": {
         "version": "5.2",
-        "date": "2021-03-22T11:27:55Z",
+        "date": "2021-05-14T11:11:42Z",
         "groups": [
             {
                 "name": "Templates/Server hardware"
@@ -128,9 +128,19 @@
                                 "priority": "AVERAGE"
                             },
                             {
-                                "expression": "{Chassis by IPMI Pyipmimon:state1[Cable/Interconnect.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state2[Cable/Interconnect.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state3[Cable/Interconnect.{#NAME}].diff()}=1",
-                                "name": "State of sensor Cable/Interconnect.{#NAME} is changed",
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Cable/Interconnect.{#NAME}].delta(24h)}>0 or {Chassis by IPMI Pyipmimon:state2[Cable/Interconnect.{#NAME}].delta(24h)}>0 or {Chassis by IPMI Pyipmimon:state3[Cable/Interconnect.{#NAME}].delta(24h)}>0",
+                                "name": "State of sensor Cable/Interconnect.{#NAME} has been changing during last day",
                                 "priority": "AVERAGE"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Cable/Interconnect.{#NAME}].last()}=29 or {Chassis by IPMI Pyipmimon:state2[Cable/Interconnect.{#NAME}].last()}=29 or {Chassis by IPMI Pyipmimon:state3[Cable/Interconnect.{#NAME}].last()}=29",
+                                "name": "State of sensor Cable/Interconnect.{#NAME} is Device Disabled",
+                                "priority": "HIGH"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Cable/Interconnect.{#NAME}].last()}=28 or {Chassis by IPMI Pyipmimon:state2[Cable/Interconnect.{#NAME}].last()}=28 or {Chassis by IPMI Pyipmimon:state3[Cable/Interconnect.{#NAME}].last()}=28",
+                                "name": "State of sensor Cable/Interconnect.{#NAME} is Uncorrectable Error",
+                                "priority": "HIGH"
                             }
                         ]
                     },
@@ -210,14 +220,24 @@
                                 "priority": "AVERAGE"
                             },
                             {
-                                "expression": "{Chassis by IPMI Pyipmimon:state1[Cooling Device.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state2[Cooling Device.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state3[Cooling Device.{#NAME}].diff()}=1",
-                                "name": "State of sensor Cooling Device.{#NAME} is changed",
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Cooling Device.{#NAME}].delta(24h)}>0 or {Chassis by IPMI Pyipmimon:state2[Cooling Device.{#NAME}].delta(24h)}>0 or {Chassis by IPMI Pyipmimon:state3[Cooling Device.{#NAME}].delta(24h)}>0",
+                                "name": "State of sensor Cooling Device.{#NAME} has been changing during last day",
                                 "priority": "AVERAGE"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Cooling Device.{#NAME}].last()}=29 or {Chassis by IPMI Pyipmimon:state2[Cooling Device.{#NAME}].last()}=29 or {Chassis by IPMI Pyipmimon:state3[Cooling Device.{#NAME}].last()}=29",
+                                "name": "State of sensor Cooling Device.{#NAME} is Device Disabled",
+                                "priority": "HIGH"
                             },
                             {
                                 "expression": "{Chassis by IPMI Pyipmimon:state1[Cooling Device.{#NAME}].last()}=4 or {Chassis by IPMI Pyipmimon:state2[Cooling Device.{#NAME}].last()}=4 or {Chassis by IPMI Pyipmimon:state3[Cooling Device.{#NAME}].last()}=4",
                                 "name": "State of sensor Cooling Device.{#NAME} is not redundant",
                                 "priority": "AVERAGE"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Cooling Device.{#NAME}].last()}=28 or {Chassis by IPMI Pyipmimon:state2[Cooling Device.{#NAME}].last()}=28 or {Chassis by IPMI Pyipmimon:state3[Cooling Device.{#NAME}].last()}=28",
+                                "name": "State of sensor Cooling Device.{#NAME} is Uncorrectable Error",
+                                "priority": "HIGH"
                             }
                         ]
                     },
@@ -295,14 +315,24 @@
                                 "priority": "AVERAGE"
                             },
                             {
-                                "expression": "{Chassis by IPMI Pyipmimon:state1[Current.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state2[Current.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state3[Current.{#NAME}].diff()}=1",
-                                "name": "State of sensor Current.{#NAME} is changed",
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Current.{#NAME}].delta(24h)}>0 or {Chassis by IPMI Pyipmimon:state2[Current.{#NAME}].delta(24h)}>0 or {Chassis by IPMI Pyipmimon:state3[Current.{#NAME}].delta(24h)}>0",
+                                "name": "State of sensor Current.{#NAME} has been changing during last day",
                                 "priority": "AVERAGE"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Current.{#NAME}].last()}=29 or {Chassis by IPMI Pyipmimon:state2[Current.{#NAME}].last()}=29 or {Chassis by IPMI Pyipmimon:state3[Current.{#NAME}].last()}=29",
+                                "name": "State of sensor Current.{#NAME} is Device Disabled",
+                                "priority": "HIGH"
                             },
                             {
                                 "expression": "not ({Chassis by IPMI Pyipmimon:state1[Current.{#NAME}].last()}=1 or {Chassis by IPMI Pyipmimon:state1[Current.{#NAME}].last()}=6 or {Chassis by IPMI Pyipmimon:state1[Current.{#NAME}].last()}=100 or {Chassis by IPMI Pyipmimon:state2[Current.{#NAME}].last()}=1 or {Chassis by IPMI Pyipmimon:state2[Current.{#NAME}].last()}=6 or {Chassis by IPMI Pyipmimon:state2[Current.{#NAME}].last()}=100 or {Chassis by IPMI Pyipmimon:state3[Current.{#NAME}].last()}=1 or {Chassis by IPMI Pyipmimon:state3[Current.{#NAME}].last()}=6 or {Chassis by IPMI Pyipmimon:state3[Current.{#NAME}].last()}=100)",
                                 "name": "State of sensor Current.{#NAME} is not good",
                                 "priority": "AVERAGE"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Current.{#NAME}].last()}=28 or {Chassis by IPMI Pyipmimon:state2[Current.{#NAME}].last()}=28 or {Chassis by IPMI Pyipmimon:state3[Current.{#NAME}].last()}=28",
+                                "name": "State of sensor Current.{#NAME} is Uncorrectable Error",
+                                "priority": "HIGH"
                             }
                         ]
                     },
@@ -388,9 +418,24 @@
                                 "priority": "AVERAGE"
                             },
                             {
-                                "expression": "{Chassis by IPMI Pyipmimon:state1[{#TYPE}.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state2[{#TYPE}.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state3[{#TYPE}.{#NAME}].diff()}=1",
-                                "name": "State of sensor {#TYPE}.{#NAME} is changed",
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[{#TYPE}.{#NAME}].delta(24h)}>0 or {Chassis by IPMI Pyipmimon:state2[{#TYPE}.{#NAME}].delta(24h)}>0 or {Chassis by IPMI Pyipmimon:state3[{#TYPE}.{#NAME}].delta(24h)}>0",
+                                "name": "State of sensor {#TYPE}.{#NAME} has been changing during last day",
                                 "priority": "AVERAGE"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[{#TYPE}.{#NAME}].last()}=29 or {Chassis by IPMI Pyipmimon:state2[{#TYPE}.{#NAME}].last()}=29 or {Chassis by IPMI Pyipmimon:state3[{#TYPE}.{#NAME}].last()}=29",
+                                "name": "State of sensor {#TYPE}.{#NAME} is Device Disabled",
+                                "priority": "HIGH"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[{#TYPE}.{#NAME}].last()}=15 or {Chassis by IPMI Pyipmimon:state2[{#TYPE}.{#NAME}].last()}=15 or {Chassis by IPMI Pyipmimon:state3[{#TYPE}.{#NAME}].last()}=15",
+                                "name": "State of sensor {#TYPE}.{#NAME} is Power Off",
+                                "priority": "AVERAGE"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[{#TYPE}.{#NAME}].last()}=28 or {Chassis by IPMI Pyipmimon:state2[{#TYPE}.{#NAME}].last()}=28 or {Chassis by IPMI Pyipmimon:state3[{#TYPE}.{#NAME}].last()}=28",
+                                "name": "State of sensor {#TYPE}.{#NAME} is Uncorrectable Error",
+                                "priority": "HIGH"
                             }
                         ]
                     },
@@ -490,9 +535,19 @@
                                 "priority": "AVERAGE"
                             },
                             {
-                                "expression": "{Chassis by IPMI Pyipmimon:state1[Drive Bay.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state2[Drive Bay.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state3[Drive Bay.{#NAME}].diff()}=1",
-                                "name": "State of sensor Drive Bay{#NAME} is changed",
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Drive Bay.{#NAME}].delta(24h)}>0 or {Chassis by IPMI Pyipmimon:state2[Drive Bay.{#NAME}].delta(24h)}>0 or {Chassis by IPMI Pyipmimon:state3[Drive Bay.{#NAME}].delta(24h)}>0",
+                                "name": "State of sensor Drive Bay.{#NAME} has been changing during last day",
                                 "priority": "AVERAGE"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Drive Bay.{#NAME}].last()}=29 or {Chassis by IPMI Pyipmimon:state2[Drive Bay.{#NAME}].last()}=29 or {Chassis by IPMI Pyipmimon:state3[Drive Bay.{#NAME}].last()}=29",
+                                "name": "State of sensor Drive Bay.{#NAME} is Device Disabled",
+                                "priority": "HIGH"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Drive Bay.{#NAME}].last()}=28 or {Chassis by IPMI Pyipmimon:state2[Drive Bay.{#NAME}].last()}=28 or {Chassis by IPMI Pyipmimon:state3[Drive Bay.{#NAME}].last()}=28",
+                                "name": "State of sensor Drive Bay.{#NAME} is Uncorrectable Error",
+                                "priority": "HIGH"
                             }
                         ]
                     },
@@ -584,6 +639,21 @@
                                 "expression": "{Chassis by IPMI Pyipmimon:state1[Fan.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state2[Fan.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state3[Fan.{#NAME}].diff()}=1",
                                 "name": "State of Fan sensor {#NAME} is changed",
                                 "priority": "AVERAGE"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Fan.{#NAME}].delta(24h)}>0 or {Chassis by IPMI Pyipmimon:state2[Fan.{#NAME}].delta(24h)}>0 or {Chassis by IPMI Pyipmimon:state3[Fan.{#NAME}].delta(24h)}>0",
+                                "name": "State of sensor Fan.{#NAME} has been changing during last day",
+                                "priority": "AVERAGE"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Fan.{#NAME}].last()}=29 or {Chassis by IPMI Pyipmimon:state2[Fan.{#NAME}].last()}=29 or {Chassis by IPMI Pyipmimon:state3[Fan.{#NAME}].last()}=29",
+                                "name": "State of sensor Fan.{#NAME} is Device Disabled",
+                                "priority": "HIGH"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Fan.{#NAME}].last()}=28 or {Chassis by IPMI Pyipmimon:state2[Fan.{#NAME}].last()}=28 or {Chassis by IPMI Pyipmimon:state3[Fan.{#NAME}].last()}=28",
+                                "name": "State of sensor Fan.{#NAME} is Uncorrectable Error",
+                                "priority": "HIGH"
                             }
                         ]
                     },
@@ -663,9 +733,19 @@
                                 "priority": "AVERAGE"
                             },
                             {
-                                "expression": "{Chassis by IPMI Pyipmimon:state1[Power Supply.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state2[Power Supply.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state3[Power Supply.{#NAME}].diff()}=1",
-                                "name": "State of sensor Power Supply.{#NAME} is changed",
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Power Supply.{#NAME}].delta(24h)}>0 or {Chassis by IPMI Pyipmimon:state2[Power Supply.{#NAME}].delta(24h)}>0 or {Chassis by IPMI Pyipmimon:state3[Power Supply.{#NAME}].delta(24h)}>0",
+                                "name": "State of sensor Power Supply.{#NAME} has been changing during last day",
                                 "priority": "AVERAGE"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Power Supply.{#NAME}].last()}=29 or {Chassis by IPMI Pyipmimon:state2[Power Supply.{#NAME}].last()}=29 or {Chassis by IPMI Pyipmimon:state3[Power Supply.{#NAME}].last()}=29",
+                                "name": "State of sensor Power Supply.{#NAME} is Device Disabled",
+                                "priority": "HIGH"
+                            },
+                            {
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Power Supply.{#NAME}].last()}=28 or {Chassis by IPMI Pyipmimon:state2[Power Supply.{#NAME}].last()}=28 or {Chassis by IPMI Pyipmimon:state3[Power Supply.{#NAME}].last()}=28",
+                                "name": "State of sensor Power Supply.{#NAME} is Uncorrectable Error",
+                                "priority": "HIGH"
                             }
                         ]
                     },
@@ -742,8 +822,8 @@
                                 "priority": "AVERAGE"
                             },
                             {
-                                "expression": "{Chassis by IPMI Pyipmimon:state1[System Firmware.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state2[System Firmware.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state3[System Firmware.{#NAME}].diff()}=1",
-                                "name": "State of sensor System Firmware.{#NAME} is changed",
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[System Firmware.{#NAME}].delta(24h)}>0 or {Chassis by IPMI Pyipmimon:state2[System Firmware.{#NAME}].delta(24h)}>0 or {Chassis by IPMI Pyipmimon:state3[System Firmware.{#NAME}].delta(24h)}>0",
+                                "name": "State of sensor System Firmware.{#NAME} has been changing during last day",
                                 "priority": "AVERAGE"
                             }
                         ]
@@ -821,8 +901,8 @@
                         ],
                         "trigger_prototypes": [
                             {
-                                "expression": "{Chassis by IPMI Pyipmimon:state1[Temperature.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state2[Temperature.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state3[Temperature.{#NAME}].diff()}=1",
-                                "name": "State of sendor Temperature {#NAME} is changed",
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Temperature.{#NAME}].delta(24h)}>0 or {Chassis by IPMI Pyipmimon:state2[Temperature.{#NAME}].delta(24h)}>0 or {Chassis by IPMI Pyipmimon:state3[Temperature.{#NAME}].delta(24h)}>0",
+                                "name": "State of sensor Temperature.{#NAME} has been changing during last day",
                                 "priority": "AVERAGE"
                             }
                         ]
@@ -901,8 +981,8 @@
                                 "priority": "AVERAGE"
                             },
                             {
-                                "expression": "{Chassis by IPMI Pyipmimon:state1[Voltage.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state2[Voltage.{#NAME}].diff()}=1 or {Chassis by IPMI Pyipmimon:state3[Voltage.{#NAME}].diff()}=1",
-                                "name": "State of sensor Voltage.{#NAME} is changed",
+                                "expression": "{Chassis by IPMI Pyipmimon:state1[Voltage.{#NAME}].delta(24h)}>0 or {Chassis by IPMI Pyipmimon:state2[Voltage.{#NAME}].delta(24h)}>0 or {Chassis by IPMI Pyipmimon:state3[Voltage.{#NAME}].delta(24h)}>0",
+                                "name": "State of sensor Voltage.{#NAME} has been changing during last day",
                                 "priority": "AVERAGE"
                             }
                         ]
